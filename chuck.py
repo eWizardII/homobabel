@@ -5,12 +5,13 @@ from pprint import pprint
 import urllib2
 from time import sleep
 from BeautifulSoup import BeautifulSoup
+import os
 
 def norris():
     tu = 0
     su = 0
     ou = 0
-    for j in range (905000,905010):
+    for j in range (905000,905500):
         try:
             urlv = "http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(j) + ".json?count=200&trim_user=true"
             source = urllib2.urlopen(urlv)
@@ -24,8 +25,6 @@ def norris():
             json_data = open("B:/Twitter/json_scrap/temp.json")
 
             data = json.load(json_data)
-
-            ##pprint(data)
 
             i = 0
             twitter_data = {}
@@ -52,15 +51,12 @@ def norris():
             f_out.writelines(f_in)
             f_out.close()
             f_in.close()
+            os.remove('B:/Twitter/json/' + str(record_id['id_str']) + '.json')
             ou = ou + 1
             tu = tu + 1
         except:
             su = su + 1
             tu = tu + 1
-            
-        ##print "Secure Users: " + str(su)
-        ##print "Open Users: " + str(ou)
-        ##print "Total Users: " + str(tu)
 
 def time_code(arg):
     '''For running code once,and take time'''
