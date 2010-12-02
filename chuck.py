@@ -12,13 +12,19 @@ def norris():
     su = 0
     ou = 0
     i  = 1
-    for j in range (1,50):
+    for j in range (1,20):
         try:
             urlv = "http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i) + ".json?count=200&trim_user=true"
             source = urllib2.urlopen(urlv)
             urlv2 = "http://twitter2-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i+1) + ".json?count=200&trim_user=true"
-            source2 = urllib2.urlopen(urlv)
-            i = i + 2
+            source2 = urllib2.urlopen(urlv2)
+            urlv3 = "http://twitter3-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i+2) + ".json?count=200&trim_user=true"
+            source3 = urllib2.urlopen(urlv3)
+            urlv4 = "http://twitter4-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i+3) + ".json?count=200&trim_user=true"
+            source4 = urllib2.urlopen(urlv4)
+            urlv5 = "http://twitter5-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i+4) + ".json?count=200&trim_user=true"
+            source5 = urllib2.urlopen(urlv5)
+            i = i + 5
 ##            soup = BeautifulSoup(source)
 ##            output = str(soup)
 ##
