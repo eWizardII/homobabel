@@ -11,10 +11,14 @@ def norris():
     tu = 0
     su = 0
     ou = 0
-    for j in range (1,100):
+    i  = 1
+    for j in range (1,50):
         try:
-            urlv = "http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(j) + ".json?count=200&trim_user=true"
+            urlv = "http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i) + ".json?count=200&trim_user=true"
             source = urllib2.urlopen(urlv)
+            urlv2 = "http://twitter2-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(i+1) + ".json?count=200&trim_user=true"
+            source2 = urllib2.urlopen(urlv)
+            i = i + 2
 ##            soup = BeautifulSoup(source)
 ##            output = str(soup)
 ##
