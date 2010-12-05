@@ -12,11 +12,12 @@ import os
 def lvl1():
     storage_ii = 0
     class birdofprey(Thread):
-        storage_i = 0
+        ##storage_i = 2 
         def __init__ (self,ip):
             Thread.__init__(self)
             self.ip = ip
             self.status = -1
+            ##self.storage_i = 0
         def run(self):
             try:
                 class MyHttpHandler(urllib2.HTTPHandler):
@@ -61,17 +62,20 @@ def lvl1():
                 f_out.close()
                 f_in.close()
                 os.remove('B:/Twitter/junk/' + str(record_id['id_str']) + '.json')
-                birdofprey.storage_i = i
+                self.storage_i = i
             except:
-                pass 
+                pass
+
+        def join(self,timeout=None):
+            self._stopevent.set()
+            threading.Thread.join(self, timeout)
+            
     source = []
 
     for host in range(1,10):
         ip = str(host)
         urlv = birdofprey(ip)
-        urlv.start()
-        storage_ii = birdofprey.storage_i + storage_ii
-        print storage_ii
+        print str(urlvself)
 
 def time_code(arg):
     '''For running code once,and take time'''
