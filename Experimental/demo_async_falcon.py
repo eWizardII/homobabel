@@ -10,9 +10,7 @@ import gzip
 import os
 
 def lvl1():
-    storage_ii = 0
     class birdofprey(Thread):
-        storage_i = 0
         def __init__ (self,ip):
             Thread.__init__(self)
             self.ip = ip
@@ -61,18 +59,17 @@ def lvl1():
                 f_out.close()
                 f_in.close()
                 os.remove('B:/Twitter/junk/' + str(record_id['id_str']) + '.json')
-                global storage_i
                 storage_i = i      
             except:
                 pass
             
     source = []
-    
+
     for host in range(1,10):
         ip = str(host)
         urlv = birdofprey(ip)
         urlv.start()
-        storage_ii = stroage_i + storage_ii
+        storage_ii = birdofprey.self.storage_i + storage_ii
         print storage_ii
 
 def time_code(arg):
