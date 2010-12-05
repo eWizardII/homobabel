@@ -17,13 +17,12 @@ def lvl1():
             Thread.__init__(self)
             self.ip = ip
         def run(self):
-            ThreadLock.acquire()
             try:
-                pidgin = ("http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(ip) + ".json?count=200&trim_user=true")
+                pidgin = ("http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(self.ip) + ".json?count=200&trim_user=true")
                 pidgin2 = urllib2.urlopen(pidgin) 
                 soup = BeautifulSoup(pidgin2)
                 output = str(soup)
-                
+
                 fileObj = open("B:/Twitter/json_scrap/temp_" + str(self.ip) + ".json","w")
                 fileObj.write(output)
                 fileObj.close()
@@ -59,7 +58,6 @@ def lvl1():
                 self.storage_i = i
             except:
                 self.storage_i = 0
-            ThreadLock.release()
         def join(self,timeout=None):
             Thread.join(self, timeout)
             
@@ -72,9 +70,12 @@ def lvl1():
         ip = str(host)
         urlv = birdofprey(ip)
         urlv.start()
-        urlv.join()
-        storage_ii = urlv.storage_i + storage_ii
         print "Active: " + str(threading.activeCount())
+        source.append(urlv)
+    
+    for threads in source:
+        threads.join()
+        storage_ii = threads.storage_i + storage_ii
     print str(storage_ii)
 
 def time_code(arg):
