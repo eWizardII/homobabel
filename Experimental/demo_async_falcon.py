@@ -16,17 +16,12 @@ def lvl1():
         def __init__ (self,ip):
             Thread.__init__(self)
             self.ip = ip
-            self.status = -1
         def run(self):
+            ThreadLock.acquire()
             try:
-                class MyHttpHandler(urllib2.HTTPHandler):
-                    def http_response(self, request, response):
-                        return response
-            
-                u = urllib2.build_opener(MyHttpHandler())
-                pidgin = u.open("http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(ip) + ".json?count=200&trim_user=true")
-
-                soup = BeautifulSoup(pidgin)
+                pidgin = ("http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(ip) + ".json?count=200&trim_user=true")
+                pidgin2 = urllib2.urlopen(pidgin) 
+                soup = BeautifulSoup(pidgin2)
                 output = str(soup)
                 
                 fileObj = open("B:/Twitter/json_scrap/temp_" + str(self.ip) + ".json","w")
@@ -53,23 +48,18 @@ def lvl1():
                     record_id                                       = record['user']
                     twitter_data[i]['id_str']                       = record_id['id_str']
                     i = i + 1
-                with open('B:/Twitter/junk/' + str(record_id['id_str']) + '.json', mode='w') as f:
+                with open('B:/Twitter/json/' + str(record_id['id_str']) + '.json', mode='w') as f:
                     json.dump(twitter_data, f, indent=2, encoding='utf-8')
-                f_in = open('B:/Twitter/junk/' + str(record_id['id_str']) + '.json', 'rb')
-                f_out = gzip.open('B:/Twitter/junk/' + str(record_id['id_str']) + '.json.gz', 'wb')
+                f_in = open('B:/Twitter/json/' + str(record_id['id_str']) + '.json', 'rb')
+                f_out = gzip.open('B:/Twitter/json/' + str(record_id['id_str']) + '.json.gz', 'wb')
                 f_out.writelines(f_in)
                 f_out.close()
                 f_in.close()
-                os.remove('B:/Twitter/junk/' + str(record_id['id_str']) + '.json')
-                ThreadLock.acquire()
+                os.remove('B:/Twitter/json/' + str(record_id['id_str']) + '.json')
                 self.storage_i = i
-                ThreadLock.release()
-                
             except:
-                ThreadLock.acquire()
                 self.storage_i = 0
-                ThreadLock.release()
-
+            ThreadLock.release()
         def join(self,timeout=None):
             Thread.join(self, timeout)
             
@@ -84,6 +74,7 @@ def lvl1():
         urlv.start()
         urlv.join()
         storage_ii = urlv.storage_i + storage_ii
+        print "Active: " + str(threading.activeCount())
     print str(storage_ii)
 
 def time_code(arg):
