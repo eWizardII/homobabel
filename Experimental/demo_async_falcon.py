@@ -3,40 +3,43 @@ import re
 import time
 import sys
 from threading import Thread
+import urllib2
+from BeautifulSoup import BeautifulSoup
+import json
+import gzip
+import os
 
 def lvl1():
-    class testit(Thread):
-       def __init__ (self,ip):
-          Thread.__init__(self)
-          self.ip = ip
-          self.status = -1
-       def run(self):
-          pingaling = os.popen("ping -q -c2 "+self.ip,"r")
-          while 1:
-            line = pingaling.readline()
-            if not line: break
-            igot = re.findall(testit.lifeline,line)
-            if igot:
-               self.status = int(igot[0])
+    class birdofprey(Thread):
+        def __init__ (self,ip):
+            Thread.__init__(self)
+            self.ip = ip
+            self.status = -1
+        def run(self):
+            try:
+                class MyHttpHandler(urllib2.HTTPHandler):
+                    def http_response(self, request, response):
+                        return response
+            
+                u = urllib2.build_opener(MyHttpHandler())
+                pidgin = u.open("http://twitter1-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(ip) + ".json?count=200&trim_user=true")
 
-    testit.lifeline = re.compile(r"(\d) received")
-    report = ("No response","Partial Response","Alive")
+                soup = BeautifulSoup(pidgin)
+                output = str(soup)
+                
+                fileObj = open("B:/Twitter/json_scrap/temp_" + str(self.ip) + ".json","w")
+                fileObj.write(output)
+                fileObj.close()
+                    
+            except:
+                pass
+               
+    source = []
 
-    print time.ctime()
-
-    pinglist = []
-
-    for host in range(60,360):
-       ip = "192.168.200."+str(host)
-       current = testit(ip)
-       pinglist.append(current)
-       current.start()
-
-    for pingle in pinglist:
-       pingle.join()
-       print "Status from ",pingle.ip,"is",report[pingle.status]
-
-    print time.ctime()
+    for host in range(1,100):
+       ip = str(host)
+       urlv = birdofprey(ip)
+       urlv.start()
 
 def time_code(arg):
     '''For running code once,and take time'''
