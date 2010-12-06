@@ -8,8 +8,19 @@ from BeautifulSoup import BeautifulSoup
 import json
 import gzip
 import threading
+import tweepy
 
-def lvl1(min_i,max_i,api):
+CONSUMER_KEY = 'TVjUUCHjcjRAQBzxNeqevQ'
+CONSUMER_SECRET = 'uDs577RFeCePYEGnFSw0npvPuT6waStSO8UNz6L4'
+ACCESS_KEY = '125084643-t7NLHdd22fxrbQAqjZklaJIYkHhBadzIjhxPwHtp'
+ACCESS_SECRET = '9Trtl2zu0Zxx320InBzwYSUlDoFAVZjy1TmhvwlhZQ'
+
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+api = tweepy.API(auth)
+api.update_status("FALCON.PY initialized and transmitting to Twitter via homobabel-cmd")
+
+def lvl1(min_i,max_i,api_name):
     storage_ii = 0
     class birdofprey(Thread):
         def __init__ (self,ip):
@@ -17,7 +28,7 @@ def lvl1(min_i,max_i,api):
             self.ip = ip
         def run(self):
             try:
-                pidgin = ("http://twitter" + str(api) + "-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(self.ip) + ".json?count=200&trim_user=true")
+                pidgin = ("http://twitter" + str(api_name) + "-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(self.ip) + ".json?count=200&trim_user=true")
                 pidgin2 = urllib2.urlopen(pidgin) 
                 soup = BeautifulSoup(pidgin2)
                 output = str(soup)
@@ -75,6 +86,15 @@ def lvl1(min_i,max_i,api):
         threads.join()
         storage_ii = threads.storage_i + storage_ii
     print str(storage_ii)
+    CONSUMER_KEY = 'TVjUUCHjcjRAQBzxNeqevQ'
+    CONSUMER_SECRET = 'uDs577RFeCePYEGnFSw0npvPuT6waStSO8UNz6L4'
+    ACCESS_KEY = '125084643-t7NLHdd22fxrbQAqjZklaJIYkHhBadzIjhxPwHtp'
+    ACCESS_SECRET = '9Trtl2zu0Zxx320InBzwYSUlDoFAVZjy1TmhvwlhZQ'
+
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+    api = tweepy.API(auth)
+    api.update_status("Twitter" + str(api_name) + " API has collected: " + str(storage_ii) + " tweets!")
     
     for host in range(min_i,max_i):
         try:
@@ -85,14 +105,18 @@ def lvl1(min_i,max_i,api):
 def time_code(arg):
     '''For running code once,and take time'''
     start = time.clock()
-    alpha = 20000
-    arg(alpha,alpha+20000,1)
-    arg(alpha+20000,alpha+40000,2)
-    arg(alpha+40000,alpha+60000,3)
-    arg(alpha+80000,alpha+100000,4)
-    arg(alpha+100000,alpha+120000,5)
+    alpha = 138400
+    intra = 18000
+    beta = alpha + 2*intra
+    api.update_status("User: " + str(alpha)+ " ending with user " + str(beta))
+    arg(alpha,alpha+intra,1)
+    arg(alpha+intra,alpha+2*intra,2)
+##    arg(alpha+2*intra,alpha+3*intra,3)
+##    arg(alpha+3*intra,alpha+4*intra,4)
+##    arg(alpha+4*intra,alpha+5*intra,5)
     end = time.clock()
     print 'Code time %.6f seconds' % (end - start)
+    api.update_status("Complete Resting...")
 
 if __name__ == '__main__':
     time_code(lvl1)
