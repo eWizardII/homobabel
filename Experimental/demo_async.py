@@ -26,15 +26,16 @@ def lvl1():
 
     pinglist = []
 
-    for host in range(60,360):
+    for host in range(60,70):
        ip = "192.168.200."+str(host)
        current = testit(ip)
        pinglist.append(current)
+       print "ping list" + str(pinglist)
        current.start()
 
     for pingle in pinglist:
        pingle.join()
-       print "Status from ",pingle.ip,"is",report[pingle.status]
+       ##print "Status from ",pingle.ip,"is",report[pingle.status]
 
     print time.ctime()
 
