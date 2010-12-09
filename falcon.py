@@ -4,35 +4,42 @@ import time
 import sys
 from threading import Thread
 import urllib2
-from BeautifulSoup import BeautifulSoup
 import json
 import gzip
 import threading
 import tweepy
-
-CONSUMER_KEY = 'TVjUUCHjcjRAQBzxNeqevQ'
-CONSUMER_SECRET = 'uDs577RFeCePYEGnFSw0npvPuT6waStSO8UNz6L4'
-ACCESS_KEY = '125084643-t7NLHdd22fxrbQAqjZklaJIYkHhBadzIjhxPwHtp'
-ACCESS_SECRET = '9Trtl2zu0Zxx320InBzwYSUlDoFAVZjy1TmhvwlhZQ'
-
-auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
-api = tweepy.API(auth)
-api.update_status("FALCON.PY initialized and transmitting to Twitter via homobabel-cmd")
+import urlparse
+import oauth2 as oauth
+from datetime import datetime
 
 def lvl1(min_i,max_i,api_name):
+    
     storage_ii = 0
+    blocked = 0
+    allowed = 0
+    
     class birdofprey(Thread):
         def __init__ (self,ip):
             Thread.__init__(self)
             self.ip = ip
+            
         def run(self):
             try:
+
+                '''OAuth Dance!'''
+                consumer_key = 'TVjUUCHjcjRAQBzxNeqevQ'
+                consumer_secret = 'uDs577RFeCePYEGnFSw0npvPuT6waStSO8UNz6L4'
+                consumer = oauth.Consumer(consumer_key, consumer_secret)
+
+                oauth_token = '125084643-t7NLHdd22fxrbQAqjZklaJIYkHhBadzIjhxPwHtp'
+                oauth_token_secret = '9Trtl2zu0Zxx320InBzwYSUlDoFAVZjy1TmhvwlhZQ'
+                token = oauth.Token(oauth_token, oauth_token_secret)
+                client = oauth.Client(consumer, token)
+                
+                PROXY_DOMAIN = "twitter" + str(api_name) + "-ewizardii.apigee.com"
                 pidgin = ("http://twitter" + str(api_name) + "-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(self.ip) + ".json?count=200&trim_user=true")
-                pidgin2 = urllib2.urlopen(pidgin) 
-                soup = BeautifulSoup(pidgin2)
-                output = str(soup)
-                ##print output
+                resp, content = client.request(pidgin, "GET", PROXY_DOMAIN)
+                output = str(content)
                 fileObj = open("B:/Twitter/json_scrap/temp_" + str(self.ip) + ".json","w")
                 fileObj.write(output)
                 fileObj.close()
@@ -66,35 +73,36 @@ def lvl1(min_i,max_i,api_name):
                 f_in.close()
                 os.remove('B:/Twitter/json/user_' + str(self.ip) + '_id_' + str(record_id['id_str'])+ '.json')
                 self.storage_i = i
+                self.passed = 1
+                self.block = 0
             except:
                 self.storage_i = 0
+                self.block = 1
+                self.passed = 0
         def join(self,timeout=None):
             Thread.join(self, timeout)
     
     ThreadLock = threading.Lock()        
     source = []
     storage_ii = 0
+    blocked = 0
+    allowed = 0
     
     for host in range(min_i,max_i):
         ip = str(host)
         urlv = birdofprey(ip)
         urlv.start()
-        ##print "Active: " + str(threading.activeCount())
         source.append(urlv)
 
     for threads in source:
         threads.join()
         storage_ii = threads.storage_i + storage_ii
-    print str(storage_ii)
-    CONSUMER_KEY = 'TVjUUCHjcjRAQBzxNeqevQ'
-    CONSUMER_SECRET = 'uDs577RFeCePYEGnFSw0npvPuT6waStSO8UNz6L4'
-    ACCESS_KEY = '125084643-t7NLHdd22fxrbQAqjZklaJIYkHhBadzIjhxPwHtp'
-    ACCESS_SECRET = '9Trtl2zu0Zxx320InBzwYSUlDoFAVZjy1TmhvwlhZQ'
-
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
-    api = tweepy.API(auth)
-    api.update_status("Twitter" + str(api_name) + " API has collected: " + str(storage_ii) + " tweets!")
+        allowed = threads.passed + allowed
+        blocked = threads.block + blocked
+    print str(storage_ii) + ' ' + str(allowed) + ' ' + str(blocked)
+    with open('B:/Twitter/log.txt', mode='a') as a_file:
+        new_ii = str(storage_ii) + '\t A:' + str(allowed) + '\t B:' + str(blocked) + '\n'
+        a_file.write(new_ii)
     
     for host in range(min_i,max_i):
         try:
@@ -105,18 +113,25 @@ def lvl1(min_i,max_i,api_name):
 def time_code(arg):
     '''For running code once,and take time'''
     start = time.clock()
-    alpha = 138400
-    intra = 18000
+    start_time = str(datetime.now()) + '\n'
+    alpha = 1
+    intra = 20
     beta = alpha + 2*intra
-    api.update_status("User: " + str(alpha)+ " ending with user " + str(beta))
     arg(alpha,alpha+intra,1)
     arg(alpha+intra,alpha+2*intra,2)
-##    arg(alpha+2*intra,alpha+3*intra,3)
-##    arg(alpha+3*intra,alpha+4*intra,4)
-##    arg(alpha+4*intra,alpha+5*intra,5)
+    arg(alpha+2*intra,alpha+3*intra,3)
+    arg(alpha+3*intra,alpha+4*intra,4)
+    arg(alpha+4*intra,alpha+5*intra,5)
     end = time.clock()
     print 'Code time %.6f seconds' % (end - start)
-    api.update_status("Complete Resting...")
+    end_time = str(datetime.now()) + '\n'
+    with open('B:/Twitter/time.txt', mode='a') as a_file:
+        new_ii = str(end - start) + '\n'
+        header = "Starting with user_id: " + str(alpha) " and ending with user_id: " + str(beta)
+        a.file.write(header)
+        a_file.write(start_time)
+        a_file.write(new_ii)
+        a_file.write(end_time)
 
 if __name__ == '__main__':
     time_code(lvl1)
