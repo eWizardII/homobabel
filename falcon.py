@@ -1,3 +1,4 @@
+''' Import Modules '''
 import os
 import re
 import time
@@ -12,11 +13,17 @@ import urlparse
 import oauth2 as oauth
 from datetime import datetime
 
+''' Run main program '''
+
 def lvl1(min_i,max_i,api_name):
+
+    ''' Define Variables '''
     
     storage_ii = 0
     blocked = 0
     allowed = 0
+
+    ''' Thread loop - birdofprey '''
     
     class birdofprey(Thread):
         def __init__ (self,ip):
@@ -37,7 +44,7 @@ def lvl1(min_i,max_i,api_name):
                 client = oauth.Client(consumer, token)
                 
                 PROXY_DOMAIN = "twitter" + str(api_name) + "-ewizardii.apigee.com"
-                pidgin = ("http://twitter" + str(api_name) + "-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(self.ip) + ".json?count=200&trim_user=true")
+                pidgin = ("http://twitter" + str(api_name) + "-ewizardii.apigee.com/1/statuses/user_timeline/"+ str(self.ip) + ".json?count=200")
                 resp, content = client.request(pidgin, "GET", PROXY_DOMAIN)
                 output = str(content)
                 fileObj = open("B:/Twitter/json_scrap/temp_" + str(self.ip) + ".json","w")
@@ -52,17 +59,25 @@ def lvl1(min_i,max_i,api_name):
                 twitter_data = {}
                 for record in data:
                     twitter_data[i]                                 = {}
-                    twitter_data[i]['created_at']                   = record['created_at']
-                    twitter_data[i]['favorited']                    = record['favorited']
-                    twitter_data[i]['id_str']                       = record['id_str']
-                    twitter_data[i]['in_reply_to_status_id_str']    = record['in_reply_to_status_id_str']
-                    twitter_data[i]['in_reply_to_user_id_str']      = record['in_reply_to_user_id_str']
-                    twitter_data[i]['retweet_count']                = record['retweet_count']
-                    twitter_data[i]['retweeted']                    = record['retweeted']
-                    twitter_data[i]['text']                         = record['text']
-                    twitter_data[i]['user']                         = record['user']
-                    record_id                                       = record['user']
+                    twitter_data[i]['created_at']                   = data[i]['created_at']
+                    twitter_data[i]['favorited']                    = data[i]['favorited']
+                    twitter_data[i]['id_str']                       = data[i]['id_str']
+                    twitter_data[i]['in_reply_to_status_id_str']    = data[i]['in_reply_to_status_id_str']
+                    twitter_data[i]['in_reply_to_user_id_str']      = data[i]['in_reply_to_user_id_str']
+                    twitter_data[i]['retweet_count']                = data[i]['retweet_count']
+                    twitter_data[i]['retweeted']                    = data[i]['retweeted']
+                    twitter_data[i]['text']                         = data[i]['text']
+##                    twitter_data[i]['user']                         = data[i]['user']
+                    record_id                                       = data[i]['user']
                     twitter_data[i]['id_str']                       = record_id['id_str']
+                    twitter_data[i]['id']                           = record_id['id']
+                    twitter_data[i]['location']                     = record_id['location']
+                    twitter_data[i]['time_zone']                    = record_id['time_zone']
+                    twitter_data[i]['followers_count']              = record_id['followers_count']
+                    twitter_data[i]['created_at']                   = record_id['created_at']
+                    twitter_data[i]['statuses_count']               = record_id['statuses_count']
+                    twitter_data[i]['verified']                     = record_id['verified']
+                    twitter_data[i]['screen_name']                  = record_id['screen_name']
                     i = i + 1
                 with open('B:/Twitter/json/user_' + str(self.ip) + '_id_' + str(record_id['id_str'])+ '.json', mode='w') as f:
                     json.dump(twitter_data, f, indent=2, encoding='utf-8')
@@ -109,26 +124,25 @@ def lvl1(min_i,max_i,api_name):
             os.remove("B:/Twitter/json_scrap/temp_" + str(host) + ".json")
         except:
             pass
+
+''' Timing Script '''
     
 def time_code(arg):
     '''For running code once,and take time'''
     start = time.clock()
     start_time = str(datetime.now()) + '\n'
-    alpha = 1
-    intra = 20
+    alpha = 312001
+    intra = 19500
     beta = alpha + 2*intra
-    arg(alpha,alpha+intra,1)
-    arg(alpha+intra,alpha+2*intra,2)
-    arg(alpha+2*intra,alpha+3*intra,3)
-    arg(alpha+3*intra,alpha+4*intra,4)
-    arg(alpha+4*intra,alpha+5*intra,5)
+    arg(alpha,alpha+intra,3)
+    arg(alpha+intra,alpha+2*intra,4)
     end = time.clock()
     print 'Code time %.6f seconds' % (end - start)
     end_time = str(datetime.now()) + '\n'
     with open('B:/Twitter/time.txt', mode='a') as a_file:
         new_ii = str(end - start) + '\n'
-        header = "Starting with user_id: " + str(alpha) " and ending with user_id: " + str(beta)
-        a.file.write(header)
+        header = "Starting with user_id: " + str(alpha) + " and ending with user_id: " + str(beta) + '\n'
+        a_file.write(header)
         a_file.write(start_time)
         a_file.write(new_ii)
         a_file.write(end_time)
