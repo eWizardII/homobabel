@@ -10,7 +10,6 @@ http://www.ewizardii.com
 ## Import Modules
 import time
 import json
-import threading
 import tweepy
 from threading import Thread
 from datetime import datetime
@@ -51,11 +50,10 @@ def lvl1(min_i,max_i):
                 """
 
                 data            = api.lookup_users(self.ip)
-                data_           = data
 
                 i               = 0
                 twitter_data    = {}
-                for record in data:
+                for _ in data:
                     data_                                           = data[i]
                     twitter_data[i]                                 = {}
                     twitter_data[i]['statuses_count']               = data_.statuses_count
@@ -70,7 +68,7 @@ def lvl1(min_i,max_i):
 
                     size_ = data_.statuses_count * 100
 
-                    if data_.protected == True :
+                    if data_.protected :
                         status = '401'
                         with open('B:/Twitter/block.txt', mode='a') as a_file:
                             new_v = str(str(data_.statuses_count) + '\n')
@@ -100,7 +98,6 @@ def lvl1(min_i,max_i):
     Neccesary Variables
     """
 
-    ThreadLock  = threading.Lock()
     source      = []
     A_          = 0
     delta       = 0
