@@ -38,7 +38,7 @@ def lvl1(min_i,max_i):
             self.api_name           = api_name
             self.oauth_token        = oauth_token
             self.oauth_token_secret = oauth_token_secret
-            
+
         def run(self):
             try:
 
@@ -105,7 +105,7 @@ def lvl1(min_i,max_i):
     """
     Neccesary Variables
     """
-    
+
     ThreadLock  = threading.Lock()        
     source      = []
     A_          = 0
