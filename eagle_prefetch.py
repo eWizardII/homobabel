@@ -52,7 +52,7 @@ def lvl1(min_i,max_i):
             for friends in Cursor(api.followers_ids,screen_name=self.ip).items():
                 i = i + 1
                 with open('B:/Twitter/topusers.csv', mode='a') as a_file:
-                    new_i  = str(friends) + '\n'
+                    new_i  = '\n' + str(friends) + '\n'
                     a_file.write(new_i)
 
             print str(i) + " users found for " + str(self.ip) + " \n"
