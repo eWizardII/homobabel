@@ -21,7 +21,7 @@ from tweepy.cursor import Cursor
 #Creates a thread of network calls to Twitter passes through VPN and Proxy
 
 
-def lvl1(min_i,max_i):
+def lvl1():
 
     ## Thread loop - birdofprey
 
@@ -44,16 +44,27 @@ def lvl1(min_i,max_i):
             api             = tweepy.API(auth)
 
             api.proxy_host  = 'twitter' + str(self.api_name) + '-ewizardii.apigee.com'
+            api.retry_count = 3
+            api.retry_delay = 1
+            
 
             ## Grab the seeds (i.e. the top 100 Twitter users ranging from @ladygaga - @womensweardaily
 
             i               = 0
-
-            for friends in Cursor(api.followers_ids,screen_name=self.ip).items():
-                i = i + 1
-                with open('B:/Twitter/topusers.csv', mode='a') as a_file:
-                    new_i  = '\n' + str(friends) + '\n'
-                    a_file.write(new_i)
+            for null in range(0,1):
+                while True:
+                    try:
+                        for friends in Cursor(api.followers_ids,screen_name=self.ip).items():
+                            i = i + 1
+                            with open('B:/Twitter/topusers.csv', mode='a') as a_file:
+                                new_i  = ',' + str(friends)
+                                a_file.write(new_i)
+                    except tweepy.TweepError, e:
+                        print "ERROR on " + str(self.ip) + " Reason: ", e
+                        with open('B:/Twitter/errors.txt', mode='a') as a_file:
+                            new_ii = "ERROR on " + str(self.ip) + " Reason: " + str(e) + "\n"
+                            a_file.write(new_ii)
+                    break
 
             print str(i) + " users found for " + str(self.ip) + " \n"
             print "Completed"
@@ -115,7 +126,7 @@ def lvl1(min_i,max_i):
         urlv.start()
         source.append(urlv)
         print ip
-        
+
     print "Complete"
 
 ## Timing Script
@@ -123,9 +134,7 @@ def lvl1(min_i,max_i):
 def time_code(arg):
     '''For running code once,and take time'''
     start       = time.clock()
-    alpha       = 11700000  #minuser
-    beta        = 17550000  #maxuser
-    arg(alpha,beta)
+    arg()
     end = time.clock()
     print 'Code time %.6f seconds' % (end - start)
 
