@@ -8,3 +8,6 @@ b = sort(b,2);
 b = unique(b,'rows');
 b = flipud(b);
 clear topusers;
+
+% Write the data back out as a CSV file
+csvwrite('B:/Twitter/topusers_clean.csv')
