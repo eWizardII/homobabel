@@ -12,6 +12,7 @@ http://www.ewizardii.com
 import time
 import json
 import tweepy
+import threading
 from threading import Thread
 from tweepy.cursor import Cursor
 
@@ -55,22 +56,25 @@ def lvl1():
             for null in range(0,1):
                 while True:
                     try:
-                        with open('C:/Twitter/tweets/tweet_' + str(self.id) + '.json', mode='w') as f:
+                        with open('C:/Twitter/tweets/user_0_' + str(self.id) + '.json', mode='w') as f:
                             f.write('[')
+                            threadLock.acquire()
                             for i, seed in enumerate(Cursor(api.user_timeline,screen_name=self.ip).items(200)):
                                 if i>0:
                                     f.write(", ")
-                                f.write("%s" % (json.dumps(dict(sc=seed.author.statuses_count, l=seed.author.lang, id=seed.author.id_str, sn=seed.author.screen_name, fc=seed.author.followers_count, v=seed.author.verified, frc=seed.author.friends_count))))
+                                f.write("%s" % (json.dumps(dict(sc=seed.author.statuses_count))))
                                 j = j + 1
+                            threadLock.release()
                             f.write("]")
                     except tweepy.TweepError, e:
-                        with open('C:/Twitter/tweets/tweet_' + str(self.id) + '.json', mode='a') as f:
+                        with open('C:/Twitter/tweets/user_0_' + str(self.id) + '.json', mode='a') as f:
                             f.write("]")
                         print "ERROR on " + str(self.ip) + " Reason: ", e
-                        with open('C:/Twitter/errors_tweet.txt', mode='a') as a_file:
+                        with open('C:/Twitter/errors_0.txt', mode='a') as a_file:
                             new_ii = "ERROR on " + str(self.ip) + " Reason: " + str(e) + "\n"
                             a_file.write(new_ii)
                     break
+
 
             ## Display the status of the project
 
@@ -79,7 +83,7 @@ def lvl1():
 
             ## Log the status of the project
 
-            with open('C:/Twitter/pre_status_tweet.txt', mode='a') as a_file:
+            with open('C:/Twitter/pre_status_0.txt', mode='a') as a_file:
                 new_iii = str(j) + " tweets found for " + str(self.ip) + " \n"
                 new_iv  = "Completed" + " \n"
                 a_file.write(new_iii)
@@ -90,8 +94,8 @@ def lvl1():
 
     ## Necessary Variables
 
+    threadLock = threading.Lock()
     source      = []
-    delta       = 0
     api_name    = 1
     json_data2  = open("C:/Twitter/commodore.json")
     data2       = json.load(json_data2)
@@ -102,7 +106,7 @@ def lvl1():
 
     ## Massive For-loop used to call the correct APIs and Twitter Users
 
-    for host in range(0,50):
+    for host in range(0,75):
         ## User 1 in API
         ip                  = data3[host]['su']
         id                  = id + 1
@@ -111,9 +115,9 @@ def lvl1():
         urlv                = birdofprey(ip,id,api_name,oauth_token,oauth_token_secret)
         urlv.start()
         source.append(urlv)
-        print ip
+        #print ip
 
-    for host in range(50,100):
+    for host in range(75,150):
         ## User 2 in API
         ip                  = data3[host]['su']
         id                  = id + 1
@@ -122,11 +126,11 @@ def lvl1():
         urlv                = birdofprey(ip,id,api_name,oauth_token,oauth_token_secret)
         urlv.start()
         source.append(urlv)
-        print ip
+        #print ip
 
     api_name2 = api_name + 1
 
-    for host in range(100,193):
+    for host in range(150,188):
         ## User 3 in API
         ip                  = data3[host]['su']
         id                  = id + 1
@@ -135,7 +139,7 @@ def lvl1():
         urlv                = birdofprey(ip,id,api_name2,oauth_token,oauth_token_secret)
         urlv.start()
         source.append(urlv)
-        print ip
+        #print ip
 
     print "Complete"
 
