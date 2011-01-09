@@ -4,7 +4,7 @@ def filetxt():
     # Open File
     file = open("kjv12.txt", "r")
     text = file.read()
-    text = text + text + text + text + text
+    text = text + text + text + text + text + text + text + text + text + text + text + text
     file.close()
 
     # Filter
@@ -38,6 +38,7 @@ def filetxt():
     print "Done Vertices!"
 
     # Generate and Print the Edges
+    fo.write('*Edges ' + '\r\n')
     import string
     numbo = range(1,len(keys)+1)
     WList = ', '.join(keys)
